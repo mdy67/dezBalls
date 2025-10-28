@@ -515,9 +515,11 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(1.25, spatulaOn())
                         .afterTime(1.25, runIndexer(-1.0))
                         .afterTime(1.75, flickArm3())
-                        .afterTime(2.75, flickArm3())
+                        .afterTime(2.1, runIndexer(-0.7))
+                        .afterTime(2.5, runIndexer(-1.0))
+                        .afterTime(3, flickArm3())
                         .afterTime(0, setNextGantry(3)) // SET NEXT GANTRY ACCORDING TO MATRIX
-                        .waitSeconds(3.25)
+                        .waitSeconds(3.3)
                         .build(),
                 robot
         );
