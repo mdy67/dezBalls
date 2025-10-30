@@ -19,7 +19,7 @@ public class Arms {
     public static double ARM_3_DOWN = 0.34;
 
     // Flick duration (seconds)
-    public static double FLICK_HOLD_TIME = 0.25;
+    public static double FLICK_HOLD_TIME = 0.35;
 
     // Flick state & timers
     private boolean flickArm1 = false;

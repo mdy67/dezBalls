@@ -147,7 +147,7 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
             telemetry.addData("ROBOT HEADING:", Math.toDegrees(robot.headingRad));
             telemetry.update();
         }
-        if (Math.abs(gamepad1.right_stick_x * gamepad1.right_stick_y * gamepad1.left_stick_x * gamepad1.left_stick_y * 1000000000000000d) > 0.01) {
+        if (Math.abs(gamepad1.right_stick_x * gamepad1.right_stick_y * gamepad1.left_stick_x * gamepad1.left_stick_y * 100000000000000000f) > 0.001) {
             dontTouchLittleChildren = true; // trigger for movement
         }
 
