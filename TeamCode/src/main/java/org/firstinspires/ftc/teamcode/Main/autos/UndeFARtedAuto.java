@@ -186,7 +186,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOff())
                         .afterTime(0.0, gantrySlot(2))
                         .afterTime(0.0, spinFlywheel(420))
-                        .afterTime(0.0, turretAngle(110))
+                        .afterTime(0.0, turretAngle(112))
                         .afterTime(0.0, runIndexer(-0.7))
                         .afterTime(0.8, flickArm2())
                         .afterTime(1.25, gantrySlot(3))
@@ -227,7 +227,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOff())
                         .afterTime(0.0, gantrySlot(2))
                         .afterTime(0.0, spinFlywheel(430))
-                        .afterTime(0.0, turretAngle(110))
+                        .afterTime(0.0, turretAngle(112))
 
                         .afterTime(0.0, runIndexer(-0.5))
                         .afterTime(1.25, flickArm2())
@@ -265,7 +265,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOn())
                         .afterTime(0.0, gantrySlot(3))
                         .afterTime(0.0, spinFlywheel(420))
-                        .afterTime(0.0, turretAngle(110))
+                        .afterTime(0.0, turretAngle(112))
                         .afterTime(0.0, runIndexer(-0.7))
                         .afterTime(1, flickArm3())
                         .afterTime(2.25, flickArm3())
@@ -329,7 +329,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(16.7, -15), Math.toRadians(0),
                                 new TranslationalVelConstraint(80),
                                 new ProfileAccelConstraint(-80, 80))
-                        .strafeToLinearHeading(new Vector2d(16.7, 15), Math.toRadians(48),
+                        .strafeToLinearHeading(new Vector2d(16.7, 15), Math.toRadians(46),
                                 new TranslationalVelConstraint(30),
                                 new ProfileAccelConstraint(-30, 30))
                         .build(),
@@ -368,7 +368,7 @@ public class UndeFARtedAuto extends LinearOpMode {
         );
 
         Action red_secondStackIntake = new UpdatingAction(
-                drive.actionBuilder(new Pose2d(16.7, 15, Math.toRadians(48)))
+                drive.actionBuilder(new Pose2d(16.7, 15, Math.toRadians(46)))
                         .afterTime(0.0, spatulaOff())
                         .afterTime(0.0, goToNextGantrySlot())
                         .afterTime(0.0, spinFlywheel(120))
@@ -386,10 +386,10 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(59, -12), Math.toRadians(0), // WALL [INTAKED]
                                 new TranslationalVelConstraint(50),
                                 new ProfileAccelConstraint(-50, 50))
-                        .strafeToLinearHeading(new Vector2d(20, -12), Math.toRadians(48),
+                        .strafeToLinearHeading(new Vector2d(20, -12), Math.toRadians(46),
                                 new TranslationalVelConstraint(50),
                                 new ProfileAccelConstraint(-50, 50))
-                        .strafeToLinearHeading(new Vector2d(16.7, 15), Math.toRadians(48),
+                        .strafeToLinearHeading(new Vector2d(16.7, 15), Math.toRadians(46),
                                 new TranslationalVelConstraint(50),
                                 new ProfileAccelConstraint(-50, 50))
                         .build(),
@@ -450,16 +450,16 @@ public class UndeFARtedAuto extends LinearOpMode {
         );
 
         Action red_moveOffLine = new UpdatingAction(
-                drive.actionBuilder(new Pose2d(16.7, 15, Math.toRadians(48)))
+                drive.actionBuilder(new Pose2d(16.7, 15, Math.toRadians(46)))
                         .afterTime(0.0, spatulaOn())
                         .afterTime(0.0, gantrySlot(3))
                         .afterTime(0, turretAngle(0))
                         .afterTime(1, turretAngle(0))
                         .afterTime(2, turretAngle(0))
-                        .strafeToLinearHeading(new Vector2d(30, 0), Math.toRadians(180),
+                        .strafeToLinearHeading(new Vector2d(30, 0), Math.toRadians(0),
                                 new TranslationalVelConstraint(10),
                                 new ProfileAccelConstraint(-10, 10))
-                        .strafeToLinearHeading(new Vector2d(30, 0), Math.toRadians(180),
+                        .strafeToLinearHeading(new Vector2d(30, 0), Math.toRadians(0),
                                 new TranslationalVelConstraint(10),
                                 new ProfileAccelConstraint(-10, 10))
                         .waitSeconds(10)
