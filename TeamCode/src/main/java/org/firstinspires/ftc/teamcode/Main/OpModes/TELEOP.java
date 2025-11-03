@@ -31,6 +31,7 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
     public boolean fixedTurretTrigger = true;
     private static final double FIXED_SHOOTER_VELOCITY = 350;
     public boolean dontTouchLittleChildren = false;
+    private int farZoneShooting = 0;
 
     @Override
     public void init() {
@@ -64,33 +65,19 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
                 robot.intake.runIndexerOnly(robot.intake.getIndexerSpeed());
             }
 
-            if (gamepad1.dpad_right) {
-                fixedTurretTrigger = true;
-            } if (gamepad1.dpad_left) {
-                fixedTurretTrigger = false;
+
+            if (gamepad1.dpad_left) {
+                farZoneShooting = 1;
+            } else if (gamepad1.dpad_right) {
+                farZoneShooting = 2;
+            } else if (gamepad1.b) {
+                farZoneShooting = 0;
             }
+           /*
 
             // --- DISTANCE & TURRET CONTROL ---
             double goalX = Diffy.BLUE_GOAL_X;
             double goalY = Diffy.BLUE_GOAL_Y;
-
-            if (!gamepad1.x && !gamepad1.b) {
-                angleOffsetTrigger = false;
-            }
-
-            if (gamepad1.x) {
-                if (!angleOffsetTrigger) {
-                    angleOffsetTrigger = true;
-                    angleOffset -= 1;
-                }
-
-            } else if (gamepad1.b) {
-                if (!angleOffsetTrigger) {
-                    angleOffsetTrigger = true;
-                    angleOffset += 1;
-                }
-
-            }
 
 
 
@@ -104,6 +91,20 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
                 robot.diffy.setAngle(turretAngle + angleOffset);
             } else {
                 robot.diffy.setAngle(90);
+            }
+
+
+
+            */
+            if (farZoneShooting == 0) {
+                robot.diffy.setAngle(90);
+                robot.flywheel.setTargetVelocity(FIXED_SHOOTER_VELOCITY);
+            } else if (farZoneShooting == 1) {
+                robot.diffy.setAngle(72.5);
+                robot.flywheel.setTargetVelocity(425);
+            } else if (farZoneShooting == 2) {
+                robot.diffy.setAngle(110);
+                robot.flywheel.setTargetVelocity(425);
             }
 
             robot.diffy.update();
@@ -124,21 +125,19 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
             double d = 299.02768;
 
             // ax^3 + bx^2 + cx + d
-            double regressionVelocity = ((a * (Math.pow(distanceInches, 3))) + (b * Math.pow(distanceInches, 2)) + ((c * distanceInches) + d));
+         //   double regressionVelocity = ((a * (Math.pow(distanceInches, 3))) + (b * Math.pow(distanceInches, 2)) + ((c * distanceInches) + d));
 
-            if (!fixedTurretTrigger) {
-                robot.flywheel.setTargetVelocity(regressionVelocity);
-            } else {
-                robot.flywheel.setTargetVelocity(FIXED_SHOOTER_VELOCITY);
-            }
+
+
+
 
             robot.flywheel.update();
 
             robot.spatula.spatulaON();
             // --- TELEMETRY ---
-            telemetry.addData("Distance to Goal", "%.2f in", distanceInches);
-            telemetry.addData("Turret Angle", "%.2f", turretAngle + angleOffset);
-            telemetry.addData("Regression Velocity", regressionVelocity);
+         //   telemetry.addData("Distance to Goal", "%.2f in", distanceInches);
+          //  telemetry.addData("Turret Angle", "%.2f", turretAngle + angleOffset);
+         //   telemetry.addData("Regression Velocity", regressionVelocity);
             telemetry.addData("Flywheel Actual", "%.2f rad/s", robot.flywheel.getVelocityRadPerSec());
             telemetry.addLine();
             telemetry.addLine("======== IMPORTANT INFORMATION ========");
