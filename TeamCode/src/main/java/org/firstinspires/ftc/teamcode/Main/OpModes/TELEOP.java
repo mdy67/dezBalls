@@ -134,6 +134,7 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
 
             robot.flywheel.update();
 
+            robot.spatula.spatulaON();
             // --- TELEMETRY ---
             telemetry.addData("Distance to Goal", "%.2f in", distanceInches);
             telemetry.addData("Turret Angle", "%.2f", turretAngle + angleOffset);
@@ -147,7 +148,7 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
             telemetry.addData("ROBOT HEADING:", Math.toDegrees(robot.headingRad));
             telemetry.update();
         }
-        if (Math.abs(gamepad1.right_stick_x * gamepad1.right_stick_y * gamepad1.left_stick_x * gamepad1.left_stick_y * 100000000000000000f) > 0.001) {
+        if (Math.abs(gamepad1.right_stick_x * gamepad1.right_stick_y * gamepad1.left_stick_x * gamepad1.left_stick_y * 1000000000000000000000f) > 0.0001) {
             dontTouchLittleChildren = true; // trigger for movement
         }
 
