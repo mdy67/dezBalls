@@ -17,9 +17,11 @@ public class Arms {
     public static double ARM_2_DOWN = 0.34;
     public static double ARM_3_UP = 0.67;
     public static double ARM_3_DOWN = 0.34;
+    public static double ARM_3_RAPID = 0.54;
+    private boolean arm3rapid = false;
 
     // Flick duration (seconds)
-    public static double FLICK_HOLD_TIME = 0.1;
+    public static double FLICK_HOLD_TIME = 0.35;
 
     // Flick state & timers
     private boolean flickArm1 = false;
@@ -53,7 +55,7 @@ public class Arms {
         // Update servo positions
         arm1.setPosition(flickArm1 ? ARM_1_UP : ARM_1_DOWN);
         arm2.setPosition(flickArm2 ? ARM_2_UP : ARM_2_DOWN);
-        arm3.setPosition(flickArm3 ? ARM_3_UP : ARM_3_DOWN);
+        arm3.setPosition(flickArm3 ? ARM_3_UP : (arm3rapid ? ARM_3_RAPID : ARM_3_DOWN));
     }
 
     /** Trigger a flick for each arm */
@@ -70,6 +72,10 @@ public class Arms {
     public void flickArm3() {
         flickArm3 = true;
         flickArm3Start = System.nanoTime() / 1e9;
+    }
+
+    public void arm3rapid(boolean gurt) {
+        arm3rapid = gurt;
     }
 
     /** Reset all arms immediately */

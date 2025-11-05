@@ -24,6 +24,7 @@ public class TagProcessor {
 
     private int lastDetectedTagId = -1; // stores last valid detection
     private Alliance currentAlliance = Alliance.BLUE;
+    public int goToSlot = 3;
 
     public enum Alliance {
         BLUE, RED
@@ -61,6 +62,7 @@ public class TagProcessor {
         opMode.telemetry.addData("Alliance", currentAlliance);
         opMode.telemetry.addData("Detected Tag", (lastDetectedTagId == -1) ? "None" : lastDetectedTagId);
         opMode.telemetry.addLine("Use D-Pad: ← = Blue | Red = →");
+
         opMode.telemetry.update();
     }
 

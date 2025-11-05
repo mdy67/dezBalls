@@ -42,7 +42,7 @@ public class Robot {
 
     public void update() {
 
-        drive.updatePoseEstimate();
+      //  drive.updatePoseEstimate();
         Pose2d odoPose = drive.localizer.getPose();
 
         xPOS = odoPose.position.x;

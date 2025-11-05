@@ -73,6 +73,16 @@ public class TELEOP extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
             } else if (gamepad1.b) {
                 farZoneShooting = 0;
             }
+
+            if (gamepad1.dpad_up) {
+                robot.arms.arm3rapid(true);
+
+            } else {
+                robot.arms.arm3rapid(false);
+            }
+
+            robot.intake.teleUpdate(gamepad1.left_bumper || gamepad1.dpad_up, gamepad1.dpad_down);
+
            /*
 
             // --- DISTANCE & TURRET CONTROL ---
