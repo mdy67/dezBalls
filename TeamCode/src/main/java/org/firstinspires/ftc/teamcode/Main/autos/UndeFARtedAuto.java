@@ -186,7 +186,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOff())
                         .afterTime(0.0, gantrySlot(2))
                         .afterTime(0.0, spinFlywheel(430))
-                        .afterTime(0.0, turretAngle(111))
+                        .afterTime(0.0, turretAngle(112))
                         .afterTime(0.0, runIndexer(-0.7))
                         .afterTime(1, flickArm2())
                         .afterTime(1.4, gantrySlot(3))
@@ -227,7 +227,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOff())
                         .afterTime(0.0, gantrySlot(2))
                         .afterTime(0.0, spinFlywheel(430))
-                        .afterTime(0.0, turretAngle(111))
+                        .afterTime(0.0, turretAngle(112))
 
                         .afterTime(0.0, runIndexer(-0.5))
                         .afterTime(1.25, flickArm2())
@@ -265,7 +265,7 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spatulaOn())
                         .afterTime(0.0, gantrySlot(3))
                         .afterTime(0.0, spinFlywheel(430))
-                        .afterTime(0.0, turretAngle(111))
+                        .afterTime(0.0, turretAngle(112))
                         .afterTime(0.0, runIndexer(-0.7))
                         .afterTime(1, flickArm3())
                         .afterTime(2.25, flickArm3())
@@ -285,10 +285,10 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spinFlywheel(120))
                         .afterTime(0, turretAngle(20))
                         .afterTime(2, turretAngle(90))
-                        .afterTime(0.0, runIndexer(0.7))
+                        .afterTime(0.0, runIndexer(-1.0))
                         .afterTime(0.0, runIntake(-1.0))
                         .afterTime(1, runIntake(1.0))
-                        .afterTime(1, runIndexer(-1.0))
+                        .afterTime(1, runIndexer(0.7))
                         .afterTime(5, runIntake(0))
                         .afterTime(5, runIndexer(-0.4))
                         .afterTime(5.5, runIndexer(0.4))
@@ -316,10 +316,10 @@ public class UndeFARtedAuto extends LinearOpMode {
                         .afterTime(0.0, spinFlywheel(120))
                         .afterTime(0, turretAngle(20))
                         .afterTime(2, turretAngle(90))
-                        .afterTime(0.0, runIndexer(0.7)) // idx in
+                        .afterTime(0.0, runIndexer(-1.0)) // idx in
                         .afterTime(0.0, runIntake(-1.0))
                         .afterTime(1, runIntake(1.0))
-                        .afterTime(1, runIndexer(-1.0)) // idx out
+                        .afterTime(1, runIndexer(0.7)) // idx out
                         .afterTime(5, runIntake(0))
                         .afterTime(5, runIndexer(-0.4))
                         .afterTime(5.5, runIndexer(0.4))
