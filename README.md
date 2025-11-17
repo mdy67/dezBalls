@@ -1,4 +1,3 @@
-# Road Runner Quickstart
+p2p time... yay fun stuff
 
-Check out the [docs](https://rr.brott.dev/docs/v1-0/tuning/).
-READ DEEZ BALLS LOLLLL
+this is the official branch for LDX gen 4
