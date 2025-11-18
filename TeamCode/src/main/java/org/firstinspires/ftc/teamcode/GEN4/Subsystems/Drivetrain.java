@@ -129,11 +129,7 @@ public class Drivetrain {
                 applyPIDPowers();
 
                 if (chassisAtTarget()) {
-                    if (finalAdjust) {
-                        state - State.FINAL_ADJUSTMENT;
-                    } else if () {
-                        state = State.IDLE;
-                    }
+
                 }
 
                 break;
