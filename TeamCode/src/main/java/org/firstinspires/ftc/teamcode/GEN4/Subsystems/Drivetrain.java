@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.GEN4.Misc.DTPID;
 import org.firstinspires.ftc.teamcode.GEN4.Misc.Utils;
 
 public class Drivetrain {
@@ -57,13 +58,13 @@ public class Drivetrain {
         rightFront.setPower(rf);
     }
 
-    public void setWeightedMotorPowers(double x, double y, double t) { // Mecanaum movement
-        double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(t), 1); // Scaling
+    public void setWeightedMotorPowers(double strafe, double fwd, double heading) { // Mecanaum movement
+        double denominator = Math.max(Math.abs(strafe) + Math.abs(fwd) + Math.abs(heading), 1); // Scaling
         double[] weightPowers = new double[]{
-                (y + x + t) / denominator,
-                (y - x + t) / denominator,
-                (y - x - t) / denominator,
-                (y + x - t) / denominator
+                (fwd + strafe + heading) / denominator,
+                (fwd - strafe + heading) / denominator,
+                (fwd - strafe - heading) / denominator,
+                (fwd + strafe - heading) / denominator
         };
         setMotorPowers(weightPowers[0], weightPowers[1], weightPowers[2], weightPowers[3]);
     }
@@ -71,10 +72,10 @@ public class Drivetrain {
     public Pose2D robotPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
     public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0.01, 0.01, AngleUnit.DEGREES, 0.01);
     private Pose2D lastTarget = targetPose;
-    public double targetX, targetY, targetT, maxPower, moveOnThreshold;
+    public double targetX, targetY, targetT, maxPower, xyThreshold, hThreshold;
     public boolean brake, finalAdjust;
 
-    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finalAdjust, double maxPower, double moveOnThreshold) {
+    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finalAdjust, double maxPower, double xyThreshold, double hThreshold) {
         if (targetPoint != lastTarget) {
             targetPose = targetPoint;
             lastTarget = targetPose;
@@ -86,7 +87,9 @@ public class Drivetrain {
             this.brake = brake;
             this.finalAdjust = finalAdjust;
             this.maxPower = maxPower;
-            this.moveOnThreshold = moveOnThreshold;
+
+            this.xyThreshold = xyThreshold;
+            this.hThreshold = hThreshold;
 
             state = State.GO_TO_POINT;
         }
@@ -99,8 +102,62 @@ public class Drivetrain {
         yError = Utils.headingClip(targetY - pinpoint.getPosY(DistanceUnit.INCH));
     }
 
+    public boolean chassisAtTarget() {
+        return ((Math.abs(xError) + Math.abs(yError)) <= xyThreshold && Math.abs(tError) < hThreshold);
+    }
+
+    DTPID xPID = new DTPID(0,0);
+    DTPID yPID = new DTPID(0, 0);
+    DTPID tPID = new DTPID(0, 0);
+
+    public void applyPIDPowers() {
+        getErrors();
+
+        double xPower = xPID.newPDPower(xError, -maxPower, maxPower);
+        double yPower = yPID.newPDPower(yError, -maxPower, maxPower);
+        double tPower = tPID.newPDPower(tError, -maxPower, maxPower);
+
+        setWeightedMotorPowers(yPower, xPower, tPower);
+    }
+
     public void update(){
         pinpoint.update();
         robotPose = pinpoint.getPosition();
+
+        switch (state) {
+            case GO_TO_POINT:
+                applyPIDPowers();
+
+                if (chassisAtTarget()) {
+                    if (finalAdjust) {
+                        state - State.FINAL_ADJUSTMENT;
+                    } else if () {
+                        state = State.IDLE;
+                    }
+                }
+
+                break;
+
+            case TELEOP:
+                break;
+
+            case HOLD_POINT:
+                break;
+
+            case FINAL_ADJUSTMENT:
+                break;
+
+            case IDLE:
+                break;
+
+
+            default:
+                // code if no cases match
+                break;
+        }
     }
+
+
+
+
 }
