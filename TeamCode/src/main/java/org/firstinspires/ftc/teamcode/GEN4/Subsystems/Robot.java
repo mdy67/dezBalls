@@ -9,11 +9,18 @@ public class Robot {
 
     public Drivetrain drivetrain;
 
-    public void update() {
-
+    public void update() { // update ALL subsystems this time lolll
+        drivetrain.update();
     }
 
-    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finalAdjust, double maxPower, double xyThreshold, double hThreshold){
-        drivetrain.goToPoint(targetPoint, brake, finalAdjust, maxPower, xyThreshold, hThreshold);
+    public void goToPoint(Pose2D targetPoint, double maxPower, double xyThreshold, double hThreshold){
+        drivetrain.state = Drivetrain.State.GO_TO_POINT;
+        drivetrain.goToPoint(targetPoint, maxPower, xyThreshold, hThreshold);
     }
+
+    public void holdPoint(Pose2D targetPoint, double maxPower, double xyThreshold, double hThreshold){ // thresholds can be null
+        drivetrain.state = Drivetrain.State.HOLD_POINT;
+        drivetrain.goToPoint(targetPoint, maxPower, xyThreshold, hThreshold);
+    }
+
 }

@@ -19,7 +19,6 @@ public class Drivetrain {
         TELEOP,
         BRAKE,
         HOLD_POINT,
-        FINAL_ADJUSTMENT,
         IDLE
     }
     public State state = State.IDLE;
@@ -73,9 +72,9 @@ public class Drivetrain {
     public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0.01, 0.01, AngleUnit.DEGREES, 0.01);
     private Pose2D lastTarget = targetPose;
     public double targetX, targetY, targetT, maxPower, xyThreshold, hThreshold;
-    public boolean brake, finalAdjust;
 
-    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finalAdjust, double maxPower, double xyThreshold, double hThreshold) {
+
+    public void goToPoint(Pose2D targetPoint, double maxPower, double xyThreshold, double hThreshold) {
         if (targetPoint != lastTarget) {
             targetPose = targetPoint;
             lastTarget = targetPose;
@@ -84,14 +83,13 @@ public class Drivetrain {
             targetY = targetPose.getY(DistanceUnit.INCH);
             targetT = targetPose.getHeading(AngleUnit.DEGREES);
 
-            this.brake = brake;
-            this.finalAdjust = finalAdjust;
+
+
             this.maxPower = maxPower;
 
             this.xyThreshold = xyThreshold;
             this.hThreshold = hThreshold;
 
-            state = State.GO_TO_POINT;
         }
     }
 
@@ -129,7 +127,7 @@ public class Drivetrain {
                 applyPIDPowers();
 
                 if (chassisAtTarget()) {
-
+                    state = State.IDLE;
                 }
 
                 break;
@@ -138,12 +136,11 @@ public class Drivetrain {
                 break;
 
             case HOLD_POINT:
-                break;
-
-            case FINAL_ADJUSTMENT:
+                applyPIDPowers(); // still goes to TARGET POINT but never exits running PID
                 break;
 
             case IDLE:
+                setMotorPowers(0,0,0,0);
                 break;
 
 

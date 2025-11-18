@@ -26,6 +26,8 @@ public class DTPID {
     // Output components
     double proportion, derivative;
 
+    double output = 0.0;
+
     /**
      * Calculates new PD output power.
      *
@@ -36,29 +38,23 @@ public class DTPID {
      */
     public double newPDPower(double error, double min, double max) {
 
-        // On first loop, fake a slightly earlier lastLoopTime to avoid divide by zero
         if (counter == 0) {
             lastLoopTime = System.nanoTime() - 10_000_000;  // 10ms
         }
 
-        // Get current time and compute Δt (in seconds)
         currentTime = System.nanoTime();
-        loopTime = (currentTime - lastLoopTime) / 1_000_000_000.0; // convert ns → seconds
-
-        // Save time for the next cycle
+        loopTime = (currentTime - lastLoopTime) / 1_000_000_000.0;
         lastLoopTime = currentTime;
 
-        // Proportional term
         proportion = kP * error;
-
-        // Derivative term (change in error over time)
         derivative = kD * (error - lastError) / loopTime;
 
-        // Store current error for next derivative calculation
         lastError = error;
         counter++;
 
-        // Return PD output, clipped to provided min/max bounds
-        return Range.clip(proportion + derivative, min, max);
+        output = Range.clip(proportion + derivative, min, max);
+
+        // motor power output
+        return Math.sqrt(output) * Math.signum(output);
     }
 }
