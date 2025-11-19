@@ -8,22 +8,18 @@ public class DTPID {
     public double kP;
     public double kD;
 
-    // Constructor for PD gains
     public DTPID(double P, double D) {
         kP = P;
         kD = D;
     }
 
-    // Internal variables
     double lastError = 0;
     int counter = 0;
 
-    // Timing variables
     double lastLoopTime = System.nanoTime();
     double loopTime = 0.0;
     double currentTime = System.nanoTime();
 
-    // Output components
     double proportion, derivative;
 
     double output = 0.0;
@@ -32,11 +28,10 @@ public class DTPID {
      * Calculates new PD output power.
      *
      * @param error The control error (target - current)
-     * @param min Minimum output value
      * @param max Maximum output value
      * @return PD output clipped to min/max
      */
-    public double newPDPower(double error, double min, double max) {
+    public double newPDPower(double error, double max) {
 
         if (counter == 0) {
             lastLoopTime = System.nanoTime() - 10_000_000;  // 10ms
@@ -52,7 +47,7 @@ public class DTPID {
         lastError = error;
         counter++;
 
-        output = Range.clip(proportion + derivative, min, max);
+        output = Range.clip(proportion + derivative, -max, max);
 
         // motor power output
         return Math.sqrt(output) * Math.signum(output);

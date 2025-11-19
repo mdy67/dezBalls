@@ -17,7 +17,6 @@ public class Drivetrain {
     public enum State {
         GO_TO_POINT,
         TELEOP,
-        BRAKE,
         HOLD_POINT,
         IDLE
     }
@@ -39,15 +38,24 @@ public class Drivetrain {
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        pinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM); //these are tuned for 3110-0002-0001 Product Insight #1
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint"); // CONFIG NAME
+        pinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM); // TODO: CHANGE THESE TO ACCURATE POS
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, // TODO: FIND THESE / CHANGE THEM
                 GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
+    }
+
+    public void setPosition(double x, double y, double heading) { // DEGREES FOR HEADING
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, x, y, AngleUnit.DEGREES, heading));
     }
 
     private void setMotorPowers(double lf, double lb, double rb, double rf) {
@@ -68,11 +76,11 @@ public class Drivetrain {
         setMotorPowers(weightPowers[0], weightPowers[1], weightPowers[2], weightPowers[3]);
     }
 
+
     public Pose2D robotPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
     public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0.01, 0.01, AngleUnit.DEGREES, 0.01);
     private Pose2D lastTarget = targetPose;
     public double targetX, targetY, targetT, maxPower, xyThreshold, hThreshold;
-
 
     public void goToPoint(Pose2D targetPoint, double maxPower, double xyThreshold, double hThreshold) {
         if (targetPoint != lastTarget) {
@@ -83,8 +91,6 @@ public class Drivetrain {
             targetY = targetPose.getY(DistanceUnit.INCH);
             targetT = targetPose.getHeading(AngleUnit.DEGREES);
 
-
-
             this.maxPower = maxPower;
 
             this.xyThreshold = xyThreshold;
@@ -93,6 +99,7 @@ public class Drivetrain {
         }
     }
 
+
     public double tError, xError, yError;
     public void getErrors() {
         tError = Utils.headingClip(targetT - pinpoint.getHeading(AngleUnit.DEGREES));
@@ -100,23 +107,34 @@ public class Drivetrain {
         yError = Utils.headingClip(targetY - pinpoint.getPosY(DistanceUnit.INCH));
     }
 
-    public boolean chassisAtTarget() {
+
+    public boolean DTatTarget() {
         return ((Math.abs(xError) + Math.abs(yError)) <= xyThreshold && Math.abs(tError) < hThreshold);
     }
 
-    DTPID xPID = new DTPID(0,0);
-    DTPID yPID = new DTPID(0, 0);
-    DTPID tPID = new DTPID(0, 0);
+
+    public static final double xkP = 0;
+    public static final double xkD = 0;
+    public static final double ykP = 0;
+    public static final double ykD = 0;
+    public static final double tkP = 0;
+    public static final double tkD = 0;
+
+    DTPID xPID = new DTPID(xkP,xkD);
+    DTPID yPID = new DTPID(ykP, ykD);
+    DTPID tPID = new DTPID(tkP, tkD);
+
 
     public void applyPIDPowers() {
         getErrors();
 
-        double xPower = xPID.newPDPower(xError, -maxPower, maxPower);
-        double yPower = yPID.newPDPower(yError, -maxPower, maxPower);
-        double tPower = tPID.newPDPower(tError, -maxPower, maxPower);
+        double xPower = xPID.newPDPower(xError, maxPower);
+        double yPower = yPID.newPDPower(yError, maxPower);
+        double tPower = tPID.newPDPower(tError, maxPower);
 
         setWeightedMotorPowers(yPower, xPower, tPower);
     }
+
 
     public void update(){
         pinpoint.update();
@@ -126,7 +144,7 @@ public class Drivetrain {
             case GO_TO_POINT:
                 applyPIDPowers();
 
-                if (chassisAtTarget()) {
+                if (DTatTarget()) {
                     state = State.IDLE;
                 }
 
@@ -136,16 +154,14 @@ public class Drivetrain {
                 break;
 
             case HOLD_POINT:
-                applyPIDPowers(); // still goes to TARGET POINT but never exits running PID
+                applyPIDPowers(); // still goes to TARGET POINT but never exits running PID so it holds pos
                 break;
 
             case IDLE:
                 setMotorPowers(0,0,0,0);
                 break;
 
-
             default:
-                // code if no cases match
                 break;
         }
     }
