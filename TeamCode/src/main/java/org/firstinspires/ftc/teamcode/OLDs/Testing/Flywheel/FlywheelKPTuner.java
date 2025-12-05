@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OLDs.Testing.Flywheel;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheel;
+import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @TeleOp(name = "Flywheel kP Tuner", group = "Flywheel Tuning")
 public class FlywheelKPTuner extends LinearOpMode {
 
-    private Flywheel flywheel;
+    private Flywheels flywheel;
 
     // Example target velocity (rad/s)
     private static final double TARGET_VELOCITY_RAD = 250;
@@ -23,7 +23,7 @@ public class FlywheelKPTuner extends LinearOpMode {
     @Override
     public void runOpMode() {
         VoltageSensor battery = hardwareMap.voltageSensor.iterator().next();
-        flywheel = new Flywheel(hardwareMap, battery);
+        flywheel = new Flywheels(hardwareMap, battery);
 
         // Replace with feedforward values from previous tuner
         double kV = 0.00163;

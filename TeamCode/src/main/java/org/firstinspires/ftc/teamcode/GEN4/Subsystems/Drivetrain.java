@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.teamcode.GEN4.Misc.DTPID;
 import org.firstinspires.ftc.teamcode.GEN4.Misc.Utils;
 
@@ -76,11 +77,15 @@ public class Drivetrain {
         setMotorPowers(weightPowers[0], weightPowers[1], weightPowers[2], weightPowers[3]);
     }
 
-
+    // ROBOT POSE
     public Pose2D robotPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
     public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0.01, 0.01, AngleUnit.DEGREES, 0.01);
     private Pose2D lastTarget = targetPose;
     public double targetX, targetY, targetT, maxPower, xyThreshold, hThreshold;
+
+    public double XVel() { return pinpoint.getVelX(DistanceUnit.INCH); }
+    public double YVel() { return pinpoint.getVelY(DistanceUnit.INCH); }
+    public double TVel() { return pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS); }
 
     public void goToPoint(Pose2D targetPoint, double maxPower, double xyThreshold, double hThreshold) {
         if (targetPoint != lastTarget) {
@@ -138,6 +143,7 @@ public class Drivetrain {
 
     public void update(){
         pinpoint.update();
+        // ROBOT POSE DEFINED
         robotPose = pinpoint.getPosition();
 
         switch (state) {

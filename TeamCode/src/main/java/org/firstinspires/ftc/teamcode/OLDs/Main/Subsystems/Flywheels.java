@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class Flywheel {
+public class Flywheels {
 
     private final DcMotorEx shooterL, shooterR;
     private final VoltageSensor battery;
@@ -34,7 +34,7 @@ public class Flywheel {
     private double lastTicks = 0.0;
     private double lastTime = 0.0;
 
-    public Flywheel(HardwareMap hardwareMap, VoltageSensor battery) {
+    public Flywheels(HardwareMap hardwareMap, VoltageSensor battery) {
         this.battery = battery;
 
         shooterL = hardwareMap.get(DcMotorEx.class, "shooterL");

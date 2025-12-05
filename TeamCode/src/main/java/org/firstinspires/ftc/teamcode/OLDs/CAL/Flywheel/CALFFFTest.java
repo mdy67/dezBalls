@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.OLDs.CAL.Flywheel;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheel;
+import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheels;
 
 @TeleOp(name = "Flywheel Feedforward + kP Test", group = "Flywheel Testing")
 public class CALFFFTest extends LinearOpMode {
 
-    private Flywheel flywheel;
+    private Flywheels flywheel;
 
     // Example target velocity (rad/s)
     private double targetVelocityRad = 250;
@@ -24,7 +24,7 @@ public class CALFFFTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         VoltageSensor battery = hardwareMap.voltageSensor.iterator().next();
-        flywheel = new Flywheel(hardwareMap, battery);
+        flywheel = new Flywheels(hardwareMap, battery);
 
         // Set feedforward and kP
         flywheel.setFeedforward(kV, kS, tunedVoltage);

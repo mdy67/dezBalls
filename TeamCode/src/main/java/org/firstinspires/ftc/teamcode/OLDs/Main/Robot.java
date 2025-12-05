@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Arms;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Diffy;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheel;
+import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Flywheels;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Subsystems.Spatula;
 import org.firstinspires.ftc.teamcode.OLDs.Main.Utils.PoseStorage;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.OLDs.RRs.MecanumDrive;
 
 public class Robot {
 
-    public Flywheel flywheel;
+    public Flywheels flywheel;
     public MecanumDrive drive;
     public ColorSensors colorSensors;
     public Drivetrain drivetrain;
@@ -41,7 +41,7 @@ public class Robot {
                 ? hardwareMap.voltageSensor.iterator().next()
                 : null;
 
-        flywheel = new Flywheel(hardwareMap, battery); // Pass battery to Flywheel
+        flywheel = new Flywheels(hardwareMap, battery); // Pass battery to Flywheel
         arms = new Arms(hardwareMap);
         diffy = new Diffy(hardwareMap);
         spatula = new Spatula(hardwareMap);
