@@ -71,6 +71,6 @@ public class Robot {
     }
 
     public void idleScoringSystems() {
-        flywheel.setTargetVelocity(250); // IDLE FLYWHEEL VELOCITY
+        flywheel.setTargetVelocity(250); // IDLE FLYWHEEL VELOCITY TO NOT DRAIN POWER
     }
 }
