@@ -7,40 +7,52 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.GEN4.Subsystems.Robot;
-
-import java.util.Arrays;
-import java.util.List;
+import org.firstinspires.ftc.teamcode.GEN4.Subsystems.Drivetrain;
 
 @Autonomous(name = "Sample Autonomous", group = "GEN4")
 public class SampleAutonomous extends LinearOpMode {
 
-    Robot robot;
+    private Robot robot;
 
-    // TODO: MAKE SURE THESE ARE THE EXACT SAME LIST!!!!! OR ELSE GOONER
     public enum State {
         INITIALIZED,
         START_POSE,
-        SHOOT_FIRST_THREE,
-        INTAKE_STACK_1_a,
-        INTAKE_STACK_1_b,
-        SHOOT_POSE_a,
-        SHOOT_POSE_b
+        POINT_1,
+        POINT_2,
+        POINT_3
     }
-    public State state = State.START_POSE;
 
-    // removed the list of strings — enum is the source of truth now
+    private State state = State.START_POSE;
 
+    @Override
+    public void runOpMode() {
 
+        robot = new Robot(hardwareMap);
+        robot.disableFlywheel(); // ENSURE FLYWHEEL NOT USED
+        robot.startup();
 
-    // TODO: =============== SAMPLES ===============
-    /*
-        robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, -60, AngleUnit.DEGREES, -90), 0.8, 10, 15);
-        if (atPosition) { state = State.STATEEE; }
-     */
-    // TODO: =======================================
+        telemetry.addLine("Initialized. Waiting for start...");
+        telemetry.update();
 
+        while (opModeInInit()) {
+            state = State.INITIALIZED;
+            robot.update();
+        }
 
-    // nextState() helper to move through the enum list in order
+        waitForStart();
+
+        while (opModeIsActive()) {
+            updateSequence();
+
+            telemetry.addData("ROBOT X:", robot.drivetrain.robotPose.getX(DistanceUnit.INCH));
+            telemetry.addData("ROBOT Y:", robot.drivetrain.robotPose.getY(DistanceUnit.INCH));
+            telemetry.addData("ROBOT HEADING:", robot.drivetrain.robotPose.getHeading(AngleUnit.DEGREES));
+            telemetry.addData("AUTO FSM: ", state);
+            telemetry.addData("DRIVETRAIN FSM:", robot.drivetrain.state);
+            telemetry.update();
+        }
+    }
+
     private void nextState() {
         int next = state.ordinal() + 1;
         if (next < State.values().length) {
@@ -54,76 +66,28 @@ public class SampleAutonomous extends LinearOpMode {
 
         switch (state) {
             case INITIALIZED:
-                robot.drivetrain.setPosition(0,0,0); // START POSE
-                // DETECT RANDOMIZATION
-                // MOVE GANTRY
-                /*
-                if tagid = 21 {
-                    goto SLOT X
-                    premove 1 = x
-                    premove 2 = x
-                    premove 3 = x
-
-                    sequence =
-                    333 (insert real sequence)
-                    233
-                    133
-                }
-
-
-                 */
-                // TELEMETRY ADD: balls in GPP formation, apriltag detected, pinpoint reset
-                break;
-
-            case START_POSE:
-
+                robot.drivetrain.setPosition(0,0,0);
                 nextState();
                 break;
 
-            case SHOOT_FIRST_THREE:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, 15, AngleUnit.DEGREES, 30), 0.9, 8, 10);
-                if (atPosition) { nextState(); } break;
-
-            case INTAKE_STACK_1_a:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, -60, AngleUnit.DEGREES, 90), 0.8, 10, 8);
-
-                if (atPosition) { nextState(); } break;
-
-            case INTAKE_STACK_1_b:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -50, 12, AngleUnit.DEGREES, -90), 0.4, 2, 15);
-                robot.intake.runIntake(1);
-
-                if (atPosition) { nextState(); } break;
-
-            // keep your structure intact
-            case SHOOT_POSE_a:
-                // your code here
+            case START_POSE:
+                nextState();
                 break;
 
-            case SHOOT_POSE_b:
-                // your code here
+            case POINT_1:
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 20, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                if (atPosition) nextState();
                 break;
-        }
-    }
 
-    @Override
-    public void runOpMode() {
+            case POINT_2:
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                if (atPosition) nextState();
+                break;
 
-        //gotta do init
-        robot = new Robot(hardwareMap);
-        robot.startup();
-
-        while (opModeInInit()) {
-            state = State.INITIALIZED;
-            updateSequence();
-        }
-        waitForStart();
-
-        // loop
-        while (opModeIsActive()) {
-            updateSequence();
-            telemetry.addData("ROBOT POSE:", robot.drivetrain.robotPose);
-            telemetry.update();
+            case POINT_3:
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                if (atPosition) nextState();
+                break;
         }
     }
 }

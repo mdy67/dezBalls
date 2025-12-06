@@ -37,20 +37,20 @@ public class Drivetrain {
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint"); // CONFIG NAME
-        pinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM); // TODO: CHANGE THESE TO ACCURATE POS
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint"); // CONFIG NAMED 12/6/2025
+        pinpoint.setOffsets(69.19, -154.75, DistanceUnit.MM); // ACCURATE POS TUNED 12/6/2025
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, // TODO: FIND THESE / CHANGE THEM
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, // ACCURATE DIRECTION TUNED 12/6/2025
                 GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pinpoint.resetPosAndIMU();
     }
@@ -66,7 +66,7 @@ public class Drivetrain {
         rightFront.setPower(rf);
     }
 
-    public void setWeightedMotorPowers(double strafe, double fwd, double heading) { // Mecanaum movement
+    public void setWeightedMotorPowers(double strafe, double fwd, double heading) { // Mecanum movement
         double denominator = Math.max(Math.abs(strafe) + Math.abs(fwd) + Math.abs(heading), 1); // Scaling
         double[] weightPowers = new double[]{
                 (fwd + strafe + heading) / denominator,
@@ -117,13 +117,13 @@ public class Drivetrain {
         return ((Math.abs(xError) + Math.abs(yError)) <= xyThreshold && Math.abs(tError) < hThreshold);
     }
 
-
-    public static final double xkP = 0;
-    public static final double xkD = 0;
-    public static final double ykP = 0;
-    public static final double ykD = 0;
-    public static final double tkP = 0;
-    public static final double tkD = 0;
+    // ADJUSTED 12/6/2025
+    public static final double xkP = 0.01;
+    public static final double xkD = 0.01;
+    public static final double ykP = 0.01;
+    public static final double ykD = 0.01;
+    public static final double tkP = 0.01;
+    public static final double tkD = 0.01;
 
     DTPID xPID = new DTPID(xkP,xkD);
     DTPID yPID = new DTPID(ykP, ykD);

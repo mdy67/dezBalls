@@ -43,7 +43,7 @@ public class Differential {
         diffyL = hardwareMap.get(CRServo.class, "diffyL");
         diffyR = hardwareMap.get(CRServo.class, "diffyR");
 
-        encL = hardwareMap.get(DcMotorEx.class, "intake");
+        encL = hardwareMap.get(DcMotorEx.class, "intakeL");
         encR = hardwareMap.get(DcMotorEx.class, "leftBack");
 
         encL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
