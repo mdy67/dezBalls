@@ -108,12 +108,13 @@ public class Drivetrain {
     public double tError, xError, yError;
     public double globalXerror, globalYerror;
     public void getErrors() {
-        tError = Utils.headingClip(targetT - pinpoint.getHeading(AngleUnit.RADIANS));
-        globalXerror = (targetX - pinpoint.getPosX(DistanceUnit.INCH));
-        globalYerror = (targetY - pinpoint.getPosY(DistanceUnit.INCH));
+        double heading = robotPose.getHeading(AngleUnit.RADIANS);
+        tError = Utils.headingClip(targetT - heading);
+        globalXerror = (targetX - robotPose.getX(DistanceUnit.INCH));
+        globalYerror = (targetY - robotPose.getY(DistanceUnit.INCH));
 
-        xError = globalXerror *Math.cos(tError) - globalYerror*Math.sin(tError);
-        yError = globalYerror*Math.cos(tError) + globalXerror *Math.sin(tError);
+        xError = globalXerror * Math.cos(heading) + globalYerror * Math.sin(heading);
+        yError = globalYerror * Math.cos(heading) - globalXerror * Math.sin(heading);
 
     }
 
@@ -123,12 +124,12 @@ public class Drivetrain {
     }
 
     // ADJUSTED 12/6/2025
-    public static final double xkP = 0.1;
-    public static final double xkD = 0.01;
-    public static final double ykP = 0.1;
-    public static final double ykD = 0.01;
-    public static final double tkP = 0.1;
-    public static final double tkD = 0.01;
+    public static final double xkP = 0.07;
+    public static final double xkD = 0.007;
+    public static final double ykP = 0.07;
+    public static final double ykD = 0.007;
+    public static final double tkP = 0.07;
+    public static final double tkD = 0.007;
 
     DTPID xPID = new DTPID(xkP,xkD);
     DTPID yPID = new DTPID(ykP, ykD);

@@ -9,15 +9,11 @@ public class Robot {
     public HardwareMap hardwareMap;
 
     public Drivetrain drivetrain;
-    public Intake intake;
     public Differential differential;
-    public Colors colors;
     public Flywheel flywheel;
+    public Wait wait = new Wait(); // Wait helper
 
-    public Pose2D blueGoal = new Pose2D(DistanceUnit.INCH, -60, 60, AngleUnit.DEGREES, 0);
-    public Pose2D redGoal  = new Pose2D(DistanceUnit.INCH, 60, 60, AngleUnit.DEGREES, 0);
-
-    private boolean flywheelEnabled = false;  // FLAG TO SKIP FLYWHEEL
+    private boolean flywheelEnabled = false;
 
     public Robot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -26,11 +22,13 @@ public class Robot {
         differential = new Differential(hardwareMap);
 
         try {
-            flywheel = new Flywheel(hardwareMap, hardwareMap.voltageSensor.iterator().hasNext()
-                    ? hardwareMap.voltageSensor.iterator().next() : null);
+            flywheel = new Flywheel(hardwareMap,
+                    hardwareMap.voltageSensor.iterator().hasNext()
+                            ? hardwareMap.voltageSensor.iterator().next()
+                            : null);
         } catch (Exception e) {
             flywheel = null;
-            flywheelEnabled = false; // flywheel hardware not present
+            flywheelEnabled = false;
         }
     }
 
@@ -41,6 +39,7 @@ public class Robot {
 
     public void update() {
         drivetrain.update();
+        wait.update(); // critical: update wait timer each loop
 
         if (flywheelEnabled && flywheel != null) {
             flywheel.update();
@@ -56,25 +55,6 @@ public class Robot {
     public void holdPoint(Pose2D targetPoint, double maxPower){
         drivetrain.state = Drivetrain.State.HOLD_POINT;
         drivetrain.goToPoint(targetPoint, maxPower, 0, 0);
-    }
-
-    public Pose2D getActiveGoal() {
-        if (alliance.isBlue()) return blueGoal;
-        else return redGoal;
-    }
-
-    public void aimToGoal() {
-        if (flywheelEnabled && flywheel != null) {
-            Pose2D activeGoal = getActiveGoal();
-            differential.aimToGoal(drivetrain.robotPose, drivetrain.XVel(), drivetrain.YVel(), drivetrain.TVel(), activeGoal);
-            flywheel.aimToGoal(activeGoal, drivetrain.robotPose, drivetrain.XVel(), drivetrain.YVel());
-        }
-    }
-
-    public void idleScoringSystems() {
-        if (flywheelEnabled && flywheel != null) {
-            flywheel.setTargetVelocity(250);
-        }
     }
 
     public void disableFlywheel() {
