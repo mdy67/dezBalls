@@ -49,9 +49,6 @@ public class Differential {
         encL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         encR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        encL.setDirection(DcMotorSimple.Direction.FORWARD);
-        encR.setDirection(DcMotorSimple.Direction.REVERSE);
-
         diffyL.setDirection(CRServo.Direction.FORWARD);
         diffyR.setDirection(CRServo.Direction.REVERSE);
 
@@ -65,6 +62,8 @@ public class Differential {
     public void resetEncoders() {
         encL.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         encR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        encL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        encR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     private void applyPowers() {

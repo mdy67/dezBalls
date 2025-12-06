@@ -37,10 +37,10 @@ public class Drivetrain {
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -69,10 +69,10 @@ public class Drivetrain {
     public void setWeightedMotorPowers(double strafe, double fwd, double heading) { // Mecanum movement
         double denominator = Math.max(Math.abs(strafe) + Math.abs(fwd) + Math.abs(heading), 1); // Scaling
         double[] weightPowers = new double[]{
-                (fwd + strafe + heading) / denominator,
-                (fwd - strafe + heading) / denominator,
                 (fwd - strafe - heading) / denominator,
-                (fwd + strafe - heading) / denominator
+                (fwd + strafe - heading) / denominator,
+                (fwd - strafe + heading) / denominator,
+                (fwd + strafe + heading) / denominator
         };
         setMotorPowers(weightPowers[0], weightPowers[1], weightPowers[2], weightPowers[3]);
     }
@@ -94,7 +94,7 @@ public class Drivetrain {
 
             targetX = targetPose.getX(DistanceUnit.INCH);
             targetY = targetPose.getY(DistanceUnit.INCH);
-            targetT = targetPose.getHeading(AngleUnit.DEGREES);
+            targetT = Math.toRadians(targetPose.getHeading(AngleUnit.DEGREES));
 
             this.maxPower = maxPower;
 
@@ -106,10 +106,15 @@ public class Drivetrain {
 
 
     public double tError, xError, yError;
+    public double globalXerror, globalYerror;
     public void getErrors() {
-        tError = Utils.headingClip(targetT - pinpoint.getHeading(AngleUnit.DEGREES));
-        xError = Utils.headingClip(targetX - pinpoint.getPosX(DistanceUnit.INCH));
-        yError = Utils.headingClip(targetY - pinpoint.getPosY(DistanceUnit.INCH));
+        tError = Utils.headingClip(targetT - pinpoint.getHeading(AngleUnit.RADIANS));
+        globalXerror = (targetX - pinpoint.getPosX(DistanceUnit.INCH));
+        globalYerror = (targetY - pinpoint.getPosY(DistanceUnit.INCH));
+
+        xError = globalXerror *Math.cos(tError) - globalYerror*Math.sin(tError);
+        yError = globalYerror*Math.cos(tError) + globalXerror *Math.sin(tError);
+
     }
 
 
@@ -118,24 +123,24 @@ public class Drivetrain {
     }
 
     // ADJUSTED 12/6/2025
-    public static final double xkP = 0.01;
+    public static final double xkP = 0.1;
     public static final double xkD = 0.01;
-    public static final double ykP = 0.01;
+    public static final double ykP = 0.1;
     public static final double ykD = 0.01;
-    public static final double tkP = 0.01;
+    public static final double tkP = 0.1;
     public static final double tkD = 0.01;
 
     DTPID xPID = new DTPID(xkP,xkD);
     DTPID yPID = new DTPID(ykP, ykD);
     DTPID tPID = new DTPID(tkP, tkD);
 
-
+    public double xPower, yPower, tPower;
     public void applyPIDPowers() {
         getErrors();
 
-        double xPower = xPID.newPDPower(xError, maxPower);
-        double yPower = yPID.newPDPower(yError, maxPower);
-        double tPower = tPID.newPDPower(tError, maxPower);
+        xPower = xPID.newPDPower(xError, maxPower);
+        yPower = yPID.newPDPower(yError, maxPower);
+        tPower = tPID.newPDPower(tError, maxPower);
 
         setWeightedMotorPowers(yPower, xPower, tPower);
     }
@@ -149,6 +154,7 @@ public class Drivetrain {
         switch (state) {
             case GO_TO_POINT:
                 applyPIDPowers();
+             //   setWeightedMotorPowers(0, 1, 0);
 
                 if (DTatTarget()) {
                     state = State.IDLE;

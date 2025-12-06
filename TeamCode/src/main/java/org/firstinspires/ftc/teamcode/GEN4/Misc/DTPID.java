@@ -29,7 +29,7 @@ public class DTPID {
      *
      * @param error The control error (target - current)
      * @param max Maximum output value
-     * @return PD output clipped to min/max
+     * @return PD output clipped to min/max with signed square root
      */
     public double newPDPower(double error, double max) {
 
@@ -49,7 +49,7 @@ public class DTPID {
 
         output = Range.clip(proportion + derivative, -max, max);
 
-        // motor power output
-        return Math.sqrt(output) * Math.signum(output);
+        // Use signed square root to avoid NaN
+        return Math.sqrt(Math.abs(output)) * Math.signum(output);
     }
 }

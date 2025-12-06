@@ -19,7 +19,8 @@ public class SampleAutonomous extends LinearOpMode {
         START_POSE,
         POINT_1,
         POINT_2,
-        POINT_3
+        POINT_3,
+        FINISHED
     }
 
     private State state = State.START_POSE;
@@ -49,6 +50,9 @@ public class SampleAutonomous extends LinearOpMode {
             telemetry.addData("ROBOT HEADING:", robot.drivetrain.robotPose.getHeading(AngleUnit.DEGREES));
             telemetry.addData("AUTO FSM: ", state);
             telemetry.addData("DRIVETRAIN FSM:", robot.drivetrain.state);
+            telemetry.addData("xPower: ", robot.drivetrain.xPower);
+            telemetry.addData("yPower: ", robot.drivetrain.yPower);
+            telemetry.addData("tPower: ", robot.drivetrain.tPower);
             telemetry.update();
         }
     }
@@ -75,18 +79,22 @@ public class SampleAutonomous extends LinearOpMode {
                 break;
 
             case POINT_1:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 20, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 10, 10, AngleUnit.DEGREES, 90), 0.25, 1, 5);
                 if (atPosition) nextState();
                 break;
 
             case POINT_2:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0), 0.25, 1, 5);
                 if (atPosition) nextState();
                 break;
 
             case POINT_3:
-                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, 0, AngleUnit.DEGREES, 0), 0.6, 2, 5);
+                robot.goToPoint(new Pose2D(DistanceUnit.INCH, -20, 0, AngleUnit.DEGREES, 0), 0.25, 1, 5);
                 if (atPosition) nextState();
+                break;
+
+            case FINISHED:
+                robot.drivetrain.state = Drivetrain.State.IDLE;
                 break;
         }
     }

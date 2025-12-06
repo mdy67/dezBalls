@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.GEN4.Misc;
 
 public class Utils {
     public static double headingClip(double value) {
-        while(value >= 180) {
-            value -= 360;
+        while(value >= Math.PI) {
+            value -= 2*Math.PI;
         }
-        while(value <= -180) {
-            value += 360;
+        while(value <= -Math.PI) {
+            value += 2*Math.PI;
         }
         return value;
     }
